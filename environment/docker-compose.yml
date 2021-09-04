@@ -1,0 +1,36 @@
+version: "3"
+
+networks:
+  redis-network:
+    name: url-shortener-network
+
+services: 
+  redis:
+    image: redis:latest
+    container_name: redis
+    networks: 
+      - redis-network
+    ports:
+        - 6379:6379
+    command: [ "redis-server" ]
+
+  python:
+    image: url-shortener:latest
+    depends_on: 
+      - redis
+    container_name: url-shortener
+    networks: 
+      - redis-network
+    volumes: 
+      - ".:/app"
+
+  pytest:
+    image: url-shortener:latest
+    depends_on: 
+      - redis
+    container_name: unit-tests
+    networks: 
+      - redis-network
+    volumes: 
+      - ".:/app"
+    entrypoint: ["pytest"]
