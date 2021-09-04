@@ -33,4 +33,4 @@ services:
       - redis-network
     volumes: 
       - ".:/app"
-    entrypoint: ["pytest"]
+    entrypoint: ["poetry", "run", "pytest"]
