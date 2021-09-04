@@ -20,5 +20,5 @@ This repo makes use of Docker Dev environments. As such, follow the instructions
 - Install the latest version of VSCode
 - Install the Microsoft extension "Remote Development"
 - Navigate to the "Remote Explorer" panel
-- 
+- Select "Attach to Container" under the Container titled: "url-shortener: python"
 
