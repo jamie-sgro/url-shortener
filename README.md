@@ -7,18 +7,9 @@ This API handles the process of converting long URLs into shortcodes to ease the
 ## Installation
 
 - Ensure you have the latest version of Docker Desktop installed
-
 - Run `sh environment/build.sh` from the root of the repository
-
   - In Windows, use Git Bash terminal, PowerShell, or equivalent to execute bash scripts
-
-- To spin up containers, run:
-
-  ``` bash
-  sh environment/start.sh
-  ```
-
-- 
+- To spin up containers, run `sh environment/start.sh` from the root of the repository
 
 
 
