@@ -2,6 +2,7 @@
 	"workspaceFolder": "/app",
 	"extensions": [
 		"ms-python.python",
-    "ms-python.vscode-pylance",
+		"ms-python.vscode-pylance",
+		"hbenl.vscode-test-explorer"
 	]
 }
