@@ -18,7 +18,7 @@ services:
     image: url-shortener:latest
     depends_on: 
       - redis
-    container_name: url-shortener
+    container_name: python
     networks: 
       - redis-network
     volumes: 
