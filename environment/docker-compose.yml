@@ -21,8 +21,6 @@ services:
     container_name: python
     networks: 
       - redis-network
-    volumes: 
-      - ".:/app"
 
   pytest:
     image: url-shortener:latest
@@ -31,6 +29,4 @@ services:
     container_name: unit-tests
     networks: 
       - redis-network
-    volumes: 
-      - ".:/app"
     entrypoint: ["poetry", "run", "pytest"]
