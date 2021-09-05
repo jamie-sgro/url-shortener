@@ -1,0 +1,21 @@
+
+name: Actions
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build_images:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Docker Images
+        run: |
+          sh environment/build.sh;
+      - name: Test Python Container
+        run: |
+          docker-compose -p url-shortener -f environment/docker-compose.yml up pytest
