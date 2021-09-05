@@ -1,4 +1,5 @@
 {
+  "python.pythonPath": "/root/.cache/pypoetry/virtualenvs/url-shortener-9TtSrW0h-py3.9",
   "python.testing.pytestArgs": [
     "tests"
   ],
