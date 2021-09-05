@@ -38,7 +38,8 @@ jobs:
           ECR_REPOSITORY: url-shortener
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker tag $ECR_REPOSITORY:latest  $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker tag url-shortener:latest public.ecr.aws/j2m0y8o3/url-shortener:latest
+          docker push public.ecr.aws/j2m0y8o3/url-shortener:latest
 
       - name: Log out of Amazon ECR
         if: always()
