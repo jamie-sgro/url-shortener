@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir \
       poetry==1.1.8
 
 # Copy environment files
-COPY environment/pyproject.toml ./pyproject.toml
+COPY ./pyproject.toml ./pyproject.toml
       
 # - Added `--no-root` per: https://github.com/python-poetry/poetry/issues/2549
 RUN poetry install --no-root
