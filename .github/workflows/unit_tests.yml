@@ -17,9 +17,9 @@ jobs:
         run: |
           sh environment/build.sh;
 
-      - name: Test Python Container
-        run: |
-          docker-compose -p url-shortener -f environment/docker-compose.yml up pytest
+      # - name: Test Python Container
+      #   run: |
+      #     docker-compose -p url-shortener -f environment/docker-compose.yml up pytest
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
