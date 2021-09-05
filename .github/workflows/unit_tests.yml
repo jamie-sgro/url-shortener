@@ -17,9 +17,9 @@ jobs:
         run: |
           sh environment/build.sh;
 
-      # - name: Test Python Container
-      #   run: |
-      #     docker-compose -p url-shortener -f environment/docker-compose.yml up pytest
+      - name: Test Python Container
+        run: |
+          docker-compose -p url-shortener -f environment/docker-compose.yml up pytest
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -32,13 +32,18 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
       - name: Build, tag, and push image to Amazon ECR
         env:
           ECR_REGISTRY: public.ecr.aws/j2m0y8o3
           ECR_REPOSITORY: url-shortener
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: ${{ steps.extract_branch.outputs.branch }}
         run: |
-          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/j2m0y8o3
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
           docker tag $ECR_REPOSITORY:latest  $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
