@@ -7,7 +7,7 @@
 		"njpwerner.autodocstring"
 	],
 	"build": {
-		"dockerfile": "../environment/Dockerfile",
+		"dockerfile": "Dockerfile",
 		"context": ".."
 	},
 	"name": "dev-url-shortener",
