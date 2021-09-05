@@ -10,6 +10,7 @@
 		"dockerfile": "../environment/Dockerfile",
 		"context": ".."
 	},
+	"name": "dev-url-shortener",
 	"settings": {
 		"python.pythonPath": "/usr/local/bin/python",
 		"python.languageServer": "Pylance",
