@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, url_for
 
 from src.url_shortener.url_shortener import UrlShortener
 
@@ -29,13 +29,24 @@ def url_add():
 
 @app.route("/api/v1/shortcode/<shortcode>", methods=["GET"])
 def shortcode_get(shortcode):
-    if type(shortcode) is not str:
-        return "malformed shortcode", 400
-
     url_shortener = UrlShortener()
     url_model = url_shortener.get_url_from_shortcode(shortcode)
 
     if not url_model.status:
         return url_model.description, 400
 
-    return redirect(str(url_model.value), code=302)
+    url = str(url_model.value)
+    if url[4:] is not "http":
+        url = "http://" + url
+        
+    return redirect("http://" + str(url_model.value), code=302)
+
+@app.route("/api/v1/shortcode/<shortcode>/stats", methods=["GET"])
+def shortcode_stats(shortcode):
+    url_shortener = UrlShortener()
+    url_model = url_shortener.get_stats_from_shortcode(shortcode)
+
+    if not url_model.status:
+        return url_model.description, 400
+
+    return url_model.value

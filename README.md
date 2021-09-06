@@ -22,6 +22,20 @@ To redirect to a url using a shortcode, submit a GET request to `http://localhos
 - If a desired shortcode was specified, like the `github` shortcode example above, the following would direct to this repository's main page:
 `http://localhost:5000/api/v1/shortcode/github`
 
+### Retrieving Stats & Metadata
+
+To view stats about the shortcodes themselves, submit a GET request to `http://localhost:5000/api/v1/shortcode/<shortcode>/stats`
+
+This query would return something similar to the following:
+
+```
+date registered: 2021-09-06 22:36:19
+last accessed: 2021-09-06 22:36:27
+access count: 1
+```
+
+
+
 ## Installation
 
 - Ensure you have the latest version of Docker Desktop installed
