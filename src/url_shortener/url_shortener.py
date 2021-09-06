@@ -42,10 +42,20 @@ class UrlShortener:
         # low enough to simply include the reverse value-key
         self.db.add("urls", self.shortcode, self.url)
         result = self.db.add("shortcodes", self.url, self.shortcode)
+
         utc_now = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
         self.db.add("timestamp", self.shortcode, utc_now)
 
         return result
 
     def get_url_from_shortcode(self, shortcode: str) -> DbAccessorResult:
+        shortcode_model = ShortcodeValidator.is_valid(shortcode)
+        if not shortcode_model.value:
+            return DbAccessorResult(False, shortcode_model.description)
         return self.db.query("urls", shortcode)
+
+    def get_stats_from_shortcode(self, shortcode: str) -> DbAccessorResult:
+        shortcode_model = ShortcodeValidator.is_valid(shortcode)
+        if not shortcode_model.value:
+            return DbAccessorResult(False, shortcode_model.description)
+        return self.db.query("timestamp", shortcode)
