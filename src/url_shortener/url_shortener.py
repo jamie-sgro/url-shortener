@@ -10,8 +10,6 @@ from src.factory import Factory
 
 class UrlShortener:
     db: IDbAccessor
-    url: str
-    shortcode: str
 
     def __init__(self) -> None:
         self.db = Factory.create_db_accessor()
@@ -21,8 +19,8 @@ class UrlShortener:
         shortcode_model = self._get_shortcode(user_shortcode)
         if not shortcode_model.value:
             return DbAccessorResult(False, shortcode_model.description)
-        self.shortcode = shortcode_model.value
-        return self._send_shortcode_to_db()
+        shortcode = shortcode_model.value
+        return self._send_shortcode_to_db(url, shortcode)
 
     @classmethod
     def _get_shortcode(cls, user_shortcode: str = None) -> ShortcodeResult:
@@ -38,15 +36,15 @@ class UrlShortener:
             for i in range(n)
         )
 
-    def _send_shortcode_to_db(self) -> DbAccessorResult:
+    def _send_shortcode_to_db(self, url: str, shortcode: str) -> DbAccessorResult:
         # Because the db currently being used is redis, the in-memory lookup costs are 
         # low enough to simply include the reverse value-key
-        self.db.add("urls", self.shortcode, self.url)
-        result = self.db.add("shortcodes", self.url, self.shortcode)
+        self.db.add("urls", shortcode, self.url)
+        result = self.db.add("shortcodes", url, shortcode)
 
-        self.db.add("date_registered", self.shortcode, self._get_utc_now())
-        self.db.add_overwrite("last_accessed", self.shortcode, "never")
-        self.db.increment("access_count", self.shortcode, 0)
+        self.db.add("date_registered", shortcode, self._get_utc_now())
+        self.db.add_overwrite("last_accessed", shortcode, "never")
+        self.db.increment("access_count", shortcode, 0)
 
 
         return result
@@ -58,7 +56,7 @@ class UrlShortener:
             return DbAccessorResult(False, shortcode_model.description)
         
         self.db.add_overwrite("last_accessed", shortcode, self._get_utc_now())
-        self.db.increment("access_count", self.shortcode, 1)
+        self.db.increment("access_count", shortcode, 1)
 
         return self.db.query("urls", shortcode)
 
