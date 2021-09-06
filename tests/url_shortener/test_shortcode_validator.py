@@ -13,3 +13,10 @@ class TestShortcodeValidator:
     def test_short_strings_invalid(self):
         assert ShortcodeValidator.is_valid("123").status == False
         assert ShortcodeValidator.is_valid("abc").status == False
+
+    def test_non_alphanumeric_invalid(self):
+        assert ShortcodeValidator.is_valid("a space exists").status == False
+        assert ShortcodeValidator.is_valid("an_underscore_exists").status == False
+        assert ShortcodeValidator.is_valid("a|pipe|exists").status == False
+        assert ShortcodeValidator.is_valid("in-valid").status == False
+        assert ShortcodeValidator.is_valid("****").status == False

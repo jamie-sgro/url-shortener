@@ -15,6 +15,11 @@ class ShortcodeValidator:
                 False, "User submitted shortcodes must be of type: string."
             )
 
+        if not shortcode.isalnum():
+            return ValidatorResult(
+                False, "User submitted shortcodes must only contian letters and numbers."
+            )
+
         if len(shortcode) <= 4:
             return ValidatorResult(
                 False, "User submitted shortcodes must be at least 4 characters long."
