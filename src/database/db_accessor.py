@@ -22,4 +22,4 @@ class DbAccessor(IDbAccessor):
     @classmethod
     def query(cls, name: str, key: str) -> bytes:
         cls.__init()
-        return cls._redis.hget(name, key)
+        return cls._redis.hget(name, key) # type: ignore
