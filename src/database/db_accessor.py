@@ -12,9 +12,13 @@ class DbAccessor(IDbAccessor):
     _redis: Redis()
 
     @classmethod
+    def __init(cls):
+        cls._redis = Redis(REDIS_HOST)
+
+    @classmethod
     def add(cls):
-        ...
+        cls.__init()
 
     @classmethod
     def query(cls):
-        ...
+        cls.__init()
