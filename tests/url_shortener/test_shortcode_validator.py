@@ -14,6 +14,20 @@ class TestShortcodeValidator:
         assert ShortcodeValidator.is_valid("123").status == False
         assert ShortcodeValidator.is_valid("abc").status == False
 
+    def test_long_strings_invalid(self):
+        assert (
+            ShortcodeValidator.is_valid(
+                "123456789012345678901234567890123456789012345678901234567890"
+            ).status
+            == False
+        )
+        assert (
+            ShortcodeValidator.is_valid(
+                "thisstringisfartoolongtobeusedintheapiandhelpspreventoverflow"
+            ).status
+            == False
+        )
+
     def test_non_alphanumeric_invalid(self):
         assert ShortcodeValidator.is_valid("a space exists").status == False
         assert ShortcodeValidator.is_valid("an_underscore_exists").status == False
