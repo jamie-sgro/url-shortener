@@ -28,8 +28,8 @@ class TestUrlShortener:
 
         # Act
         result = url_shortener.submit_url_and_get_shortcode(
-            "some_url", "desired_shortcode"
+            "some_url", "DesiredShortcode"
         )
 
         # Assert
-        assert result == "desired_shortcode"
+        assert result == "DesiredShortcode"
