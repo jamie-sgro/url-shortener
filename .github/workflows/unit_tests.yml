@@ -31,7 +31,7 @@ jobs:
         id: extract_branch
         
       - name: Build Docker Images
-        run: sh environment/build.sh;
+        run: sh environment/build.bash;
 
       - name: Test Python Container
         run: |
