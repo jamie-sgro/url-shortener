@@ -4,7 +4,12 @@
 
 This API handles the process of converting long URLs into shortcodes to ease the use of passing URLs between users and systems.
 
+## Using Url-Shortener
+To submit a url to be shortened, submit a POST request to http://localhost:5000/api/v1/url, with the query parameter `url` included. A valid POST request could look like:
+`http://localhost:5000/api/v1/url?url=google.ca`
 
+To redirect to a url using a shortcode, submit a GET request to `http://localhost:5000/api/v1/shortcode/<shortcode>`. A valid GET reqeust could look like:
+`http://localhost:5000/api/v1/shortcode/hdf4oc`
 
 ## Installation
 
