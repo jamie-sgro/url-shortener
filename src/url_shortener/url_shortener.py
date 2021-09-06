@@ -45,6 +45,8 @@ class UrlShortener:
         result = self.db.add("shortcodes", self.url, self.shortcode)
 
         self.db.add("date_registered", self.shortcode, self._get_utc_now())
+        self.db.add_overwrite("last_accessed", self.shortcode, "never")
+
 
         return result
 
