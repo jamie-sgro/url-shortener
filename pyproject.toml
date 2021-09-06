@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "url-shortener"
+version = "0.1.0"
+description = "This API handles the process of converting long URLs into shortcodes to ease the use of passing URLs between users and systems."
+authors = ["Jamie Sgro <jamie.sgro@uwaterloo.ca>"]
+
+[tool.poetry.dependencies]
+python = "^3.9.6"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.0"
+
+[build-system]
+requires = ["poetry-core>=1.1.8"]
+build-backend = "poetry.core.masonry.api"

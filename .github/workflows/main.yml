@@ -1,0 +1,66 @@
+
+name: Main
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'Release-*.*.*'
+
+jobs:
+  build_images:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        
+      - name: Extract branch name
+        shell: bash
+        # Get branch name, and convert `#` and `/` into `_`
+        # Can later be called with `${{steps.extract_branch.outputs.branch}}`
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_HEAD_REF} | tr /#/ _)"
+        id: extract_branch
+
+      - name: Get version number
+        id: version_tag
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        
+      - name: Check output
+        env:
+          RELEASE_VERSION: ${{ steps.version_tag.outputs.tag }}
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ steps.version_tag.outputs.tag }}
+        
+      - name: Build Docker Images
+        run: sh environment/build.bash;
+
+      - name: Test Python Container
+        run: |
+          docker-compose -p url-shortener -f environment/docker-compose.yml up pytest
+
+      - name: Tag and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: public.ecr.aws/j2m0y8o3
+          ECR_REPOSITORY: url-shortener
+          RELEASE_VERSION: ${{ steps.version_tag.outputs.tag }}
+        run: |
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
+          docker tag $ECR_REPOSITORY:latest  $ECR_REGISTRY/$ECR_REPOSITORY:main
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:main
+          docker tag $ECR_REPOSITORY:latest  $ECR_REGISTRY/$ECR_REPOSITORY:$RELEASE_VERSION
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$RELEASE_VERSION
+
+      - name: Log out of Amazon ECR
+        if: always()
+        run: docker logout ${{ steps.login-ecr.outputs.registry }}
