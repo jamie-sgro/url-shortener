@@ -34,6 +34,10 @@ To redirect to a url using a shortcode, submit a GET request to `http://localhos
 
 ## Local Development
 
+*Note all containers are publicly hosted on AWS' Elastic Container Registry found here:*
+
+https://gallery.ecr.aws/j2m0y8o3/url-shortener
+
 This repo makes use of Docker Dev environments. As such, follow the instructions found [here](https://code.visualstudio.com/docs/remote/containers). At minimum:
 
 - Install the latest version of VSCode
