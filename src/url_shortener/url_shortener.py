@@ -46,6 +46,7 @@ class UrlShortener:
 
         self.db.add("date_registered", self.shortcode, self._get_utc_now())
         self.db.add_overwrite("last_accessed", self.shortcode, "never")
+        self.db.increment("access_count", self.shortcode, 0)
 
 
         return result
@@ -57,6 +58,7 @@ class UrlShortener:
             return DbAccessorResult(False, shortcode_model.description)
         
         self.db.add_overwrite("last_accessed", shortcode, self._get_utc_now())
+        self.db.increment("access_count", self.shortcode, 1)
 
         return self.db.query("urls", shortcode)
 
@@ -72,6 +74,7 @@ class UrlShortener:
         stats: List[DbAccessorResult] = []
         stats.append(self._get_date_registered(shortcode))
         stats.append(self._get_last_accessed(shortcode))
+        stats.append(self._get_access_count(shortcode))
 
         result = self._combine_db_results(stats)
 
@@ -97,3 +100,8 @@ class UrlShortener:
             concatenated_values += "\n" + str(result.value)
 
         return DbAccessorResult(True, "Success", concatenated_values)
+
+    def _get_access_count(self, shortcode: str) -> DbAccessorResult:
+        db_model = self.db.query("access_count", shortcode)
+        db_model.value = f"access count: {db_model.value}"
+        return db_model

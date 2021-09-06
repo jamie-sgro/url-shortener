@@ -33,8 +33,8 @@ class DbAccessor(IDbAccessor):
     @classmethod
     def increment(cls, name: str, key: str, value: int) -> DbAccessorResult:
         cls.__init()
-        cls._redis.hincrby(name, key, value)
-        return DbAccessorResult(True, "Success", value)
+        result = cls._redis.hincrby(name, key, value)
+        return DbAccessorResult(True, "Success", result)
 
     @classmethod
     def query(cls, name: str, key: str) -> DbAccessorResult:

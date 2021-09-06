@@ -21,6 +21,7 @@ class TestUrlShortener:
             ("urls", "Abc123"),
             ("date_registered", "Abc123"),
             ("last_accessed", "Abc123"),
+            ("access_count", "Abc123"),
         ]
         for hash, key in self.reserved_hashes:
             if self.r.hget(hash, key) is not None:
