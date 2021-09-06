@@ -1,10 +1,12 @@
 from dataclasses import dataclass
+from typing import Union
 
 
 @dataclass
 class ShortcodeResult:
     status: bool
     description: str
+    value: Union[str, None] = None
 
 
 class ShortcodeValidator:
@@ -17,7 +19,8 @@ class ShortcodeValidator:
 
         if not shortcode.isalnum():
             return ShortcodeResult(
-                False, "User submitted shortcodes must only contian letters and numbers."
+                False,
+                "User submitted shortcodes must only contian letters and numbers.",
             )
 
         if len(shortcode) <= 4:
@@ -25,4 +28,4 @@ class ShortcodeValidator:
                 False, "User submitted shortcodes must be at least 4 characters long."
             )
 
-        return ShortcodeResult(True, "User submitted shortcodes is valid.")
+        return ShortcodeResult(True, "User submitted shortcode is valid.", shortcode)
