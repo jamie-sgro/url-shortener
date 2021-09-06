@@ -7,11 +7,15 @@ from src.url_shortener.shortcode_validator import ShortcodeValidator
 class UrlShortener:
     @classmethod
     def submit_url_and_get_shortcode(cls, url: str, user_shortcode: str = None) -> str:
+        shortcode: str
         if user_shortcode is not None:
             cls._try_to_process_user_shortcode(user_shortcode)
-            return user_shortcode
+            shortcode = user_shortcode
+        else:
+            shortcode = cls._random_string_of_length_n(6)
 
-        return cls._random_string_of_length_n(6)
+        cls._send_shortcode_to_db(shortcode)
+        return shortcode
 
     @classmethod
     def _try_to_process_user_shortcode(cls, user_shortcode: str) -> str:
@@ -25,3 +29,7 @@ class UrlShortener:
             choice(string.ascii_lowercase + string.ascii_uppercase + string.digits)
             for i in range(n)
         )
+
+    @staticmethod
+    def _send_shortcode_to_db(shortcode: str):
+        raise NotImplementedError
