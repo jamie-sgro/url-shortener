@@ -1,19 +1,24 @@
 import string
 from random import choice
 
+from src.database.i_db_accessor import DbAccessorResult, IDbAccessor
 from src.url_shortener.shortcode_validator import ShortcodeValidator
+from src.factory import Factory
 
 
 class UrlShortener:
+    db: IDbAccessor
     url: str
     shortcode: str
 
-    @classmethod
-    def submit_url_and_get_shortcode(cls, url: str, user_shortcode: str = None) -> str:
-        cls.url = url
-        cls.shortcode = cls._get_shortcode(user_shortcode)
-        cls._send_shortcode_to_db()
-        return cls.shortcode
+    def __init__(self) -> None:
+        self.db = Factory.create_db_accessor()
+
+    def submit_url_and_get_shortcode(self, url: str, user_shortcode: str = None) -> DbAccessorResult:
+        self.url = url
+        self.shortcode = self._get_shortcode(user_shortcode)
+        result = self._send_shortcode_to_db()
+        return result
 
     @classmethod
     def _get_shortcode(cls, user_shortcode: str = None) -> str:
@@ -38,7 +43,12 @@ class UrlShortener:
             for i in range(n)
         )
 
-    @classmethod
-    def _send_shortcode_to_db(cls):
-        # TODO: Send to db
-        return cls.shortcode
+    def _send_shortcode_to_db(self) -> DbAccessorResult:
+        result = self.db.add("shortcodes", self.url, self.shortcode)
+        # Because the db currently being used is redis, the in-memory lookup costs are 
+        # low enough to simply include the reverse value-key
+        self.db.add("urls", self.shortcode, self.url)
+        return result
+
+    def get_url_from_shortcode(self, shortcode: str) -> DbAccessorResult:
+        return self.db.query("urls", shortcode)
