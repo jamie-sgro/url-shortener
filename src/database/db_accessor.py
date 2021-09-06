@@ -18,7 +18,7 @@ class DbAccessor(IDbAccessor):
     def add(cls, name: str, key: str, value: Any) -> DbAccessorResult:
         cls.__init()
         if cls._redis.hget(name, key) is not None:
-            return DbAccessorResult(False, f"redis key `{key}` already has a value")
+            return DbAccessorResult(False, f"redis key `{name}:{key}` already has a value")
         cls._redis.hset(name, key, value)
         return DbAccessorResult(True, "Success", value)
 
