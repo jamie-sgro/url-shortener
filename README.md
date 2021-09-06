@@ -12,6 +12,7 @@ This API handles the process of converting long URLs into shortcodes to ease the
 - Run `sh environment/build.bash` from the root of the repository
   - In Windows, use Git Bash terminal, PowerShell, or equivalent to execute bash scripts
 - To spin up containers, run `sh environment/start.bash` from the root of the repository
+- Navigate to http://localhost:5000/ to view the frontend
 
 
 
