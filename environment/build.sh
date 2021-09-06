@@ -3,7 +3,7 @@ echo Building url-shortener
 
 docker pull public.ecr.aws/j2m0y8o3/url-shortener:dependencies || true
 
-docker build --target dependencies --cache-from public.ecr.aws/j2m0y8o3/url-shortener:dependencies -t url-shortener:dependencies -t public.ecr.aws/j2m0y8o3/url-shortener:dependencies
+docker build --target dependencies --cache-from public.ecr.aws/j2m0y8o3/url-shortener:dependencies -t url-shortener:dependencies -t public.ecr.aws/j2m0y8o3/url-shortener:dependencies .
 
 docker push public.ecr.aws/j2m0y8o3/url-shortener:dependencies
 
