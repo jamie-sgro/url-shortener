@@ -23,6 +23,7 @@ class DbAccessor(IDbAccessor):
         return DbAccessorResult(True, "Success", value)
 
     @classmethod
-    def query(cls, name: str, key: str) -> bytes:
+    def query(cls, name: str, key: str) -> DbAccessorResult:
         cls.__init()
-        return cls._redis.hget(name, key)  # type: ignore
+        result = cls._redis.hget(name, key)  # type: ignore
+        return DbAccessorResult(True, "Success", result)

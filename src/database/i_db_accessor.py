@@ -7,7 +7,7 @@ from abc import ABC, abstractclassmethod
 class DbAccessorResult:
     status: bool
     description: str
-    value: Union[str, None] = None
+    value: Union[str, bytes, None] = None
 
 
 class IDbAccessor(ABC):
