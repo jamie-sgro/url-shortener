@@ -11,6 +11,14 @@ class TestUrlShortener:
             return DbAccessorResult(True, "Success", value)
 
         @classmethod
+        def add_overwrite(cls, name: str, key: str, value: Any) -> DbAccessorResult:
+            return DbAccessorResult(True, "Success", value)
+
+        @classmethod
+        def increment(cls, name: str, key: str, value: int) -> DbAccessorResult:
+            return DbAccessorResult(True, "Success", value) 
+
+        @classmethod
         def query(cls, name: str, key: str) -> DbAccessorResult:
             return DbAccessorResult(True, "Success", "a_value")
 

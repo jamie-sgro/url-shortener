@@ -44,7 +44,7 @@ class UrlShortener:
         result = self.db.add("shortcodes", self.url, self.shortcode)
 
         utc_now = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
-        self.db.add("timestamp", self.shortcode, utc_now)
+        self.db.add("date_registered", self.shortcode, utc_now)
 
         return result
 
@@ -58,4 +58,7 @@ class UrlShortener:
         shortcode_model = ShortcodeValidator.is_valid(shortcode)
         if not shortcode_model.value:
             return DbAccessorResult(False, shortcode_model.description)
-        return self.db.query("timestamp", shortcode)
+        
+        db_model = self.db.query("date_registered", shortcode)
+        db_model.value = f"date registered: {db_model.value}"
+        return db_model
