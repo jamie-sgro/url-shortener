@@ -37,10 +37,10 @@ docker-compose -p url-shortener -f environment/docker-compose.yml up pytest
 These tests can also be ran in debug mode. For more info, review the currently installed extensions in your containerized vscode IDE with the keyword "test"
 
 3. From the dev container CLI, tests can also be run with:
-  1. To run only unit tests (faster) run the following:
-      `poetry run pytest -m "not integration_test"`
-  2. To run only integration tests (slower) run the following:
-      `poetry run pytest -m integration_test`
-  3. To run the whole test suit, run:
-      `poetry run pytest`
-  3. For any issues that arise, the `py.test -h` returns pytest's documentation
+        1. To run only unit tests (faster) run the following:
+            `poetry run pytest -m "not integration_test"`
+        2. To run only integration tests (slower) run the following:
+            `poetry run pytest -m integration_test`
+        3. To run the whole test suit, run:
+            `poetry run pytest`
+        4. For any issues that arise, the `py.test -h` returns pytest's documentation
