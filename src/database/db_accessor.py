@@ -33,7 +33,7 @@ class DbAccessor(IDbAccessor):
     @classmethod
     def increment(cls, name: str, key: str, value: int) -> DbAccessorResult:
         """Increments the number stored at key by one. If the key does not exist,
-         it is set to 0 before performing the operation"""
+        it is set to 0 before performing the operation"""
         cls.__init()
         result = cls._redis.hincrby(name, key, value)
         return DbAccessorResult(True, "Success", result)
