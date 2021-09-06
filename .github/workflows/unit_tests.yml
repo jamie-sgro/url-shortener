@@ -36,11 +36,10 @@ jobs:
         env:
           ECR_REGISTRY: public.ecr.aws/j2m0y8o3
           ECR_REPOSITORY: url-shortener
-          IMAGE_TAG: ${GITHUB_REF##*/}
         run: |
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
-          docker tag $ECR_REPOSITORY:latest  $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker tag $ECR_REPOSITORY:latest  $ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_REF##*/}
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_REF##*/}
 
       - name: Log out of Amazon ECR
         if: always()
