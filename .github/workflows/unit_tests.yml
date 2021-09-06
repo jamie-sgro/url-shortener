@@ -31,6 +31,11 @@ jobs:
       - name: Log in to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+        
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_HEAD_REF} | tr / -"
+        id: extract_branch
 
       - name: Build, tag, and push image to Amazon ECR
         env:
@@ -38,8 +43,8 @@ jobs:
           ECR_REPOSITORY: url-shortener
         run: |
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
-          docker tag $ECR_REPOSITORY:latest  $ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_HEAD_REF}
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_HEAD_REF}
+          docker tag $ECR_REPOSITORY:latest  $ECR_REGISTRY/$ECR_REPOSITORY:${{steps.extract_branch.outputs.branch}}
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{steps.extract_branch.outputs.branch}}
 
       - name: Log out of Amazon ECR
         if: always()
