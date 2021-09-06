@@ -1,5 +1,6 @@
 import string
 from random import choice
+from datetime import datetime, timezone
 
 from src.database.i_db_accessor import DbAccessorResult, IDbAccessor
 from src.url_shortener.shortcode_validator import ShortcodeValidator, ShortcodeResult
@@ -37,10 +38,13 @@ class UrlShortener:
         )
 
     def _send_shortcode_to_db(self) -> DbAccessorResult:
-        result = self.db.add("shortcodes", self.url, self.shortcode)
         # Because the db currently being used is redis, the in-memory lookup costs are 
         # low enough to simply include the reverse value-key
         self.db.add("urls", self.shortcode, self.url)
+        result = self.db.add("shortcodes", self.url, self.shortcode)
+        utc_now = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+        self.db.add("timestamp", self.shortcode, utc_now)
+
         return result
 
     def get_url_from_shortcode(self, shortcode: str) -> DbAccessorResult:
