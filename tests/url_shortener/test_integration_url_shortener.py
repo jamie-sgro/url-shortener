@@ -16,7 +16,12 @@ class TestUrlShortener:
         - Remove all keywords from database after tests run (regardless of pass or fail)
         """
         self.r = Redis(REDIS_HOST)
-        self.reserved_hashes = [("shortcodes", "test"), ("urls", "Abc123"), ("date_registered", "Abc123")]
+        self.reserved_hashes = [
+            ("shortcodes", "test"),
+            ("urls", "Abc123"),
+            ("date_registered", "Abc123"),
+            ("last_accessed", "Abc123"),
+        ]
         for hash, key in self.reserved_hashes:
             if self.r.hget(hash, key) is not None:
                 raise AssertionError(f"redis key `{hash}:{key}` already has data")

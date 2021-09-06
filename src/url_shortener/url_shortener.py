@@ -1,3 +1,4 @@
+from typing import List
 import string
 from random import choice
 from datetime import datetime, timezone
@@ -43,22 +44,54 @@ class UrlShortener:
         self.db.add("urls", self.shortcode, self.url)
         result = self.db.add("shortcodes", self.url, self.shortcode)
 
-        utc_now = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
-        self.db.add("date_registered", self.shortcode, utc_now)
+        self.db.add("date_registered", self.shortcode, self._get_utc_now())
 
         return result
 
     def get_url_from_shortcode(self, shortcode: str) -> DbAccessorResult:
         shortcode_model = ShortcodeValidator.is_valid(shortcode)
-        if not shortcode_model.value:
+        print(shortcode_model, flush=True)
+        if not shortcode_model.status:
             return DbAccessorResult(False, shortcode_model.description)
+        
+        self.db.add_overwrite("last_accessed", shortcode, self._get_utc_now())
+
         return self.db.query("urls", shortcode)
+
+    @staticmethod
+    def _get_utc_now() -> str:
+        return datetime.now(tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
 
     def get_stats_from_shortcode(self, shortcode: str) -> DbAccessorResult:
         shortcode_model = ShortcodeValidator.is_valid(shortcode)
-        if not shortcode_model.value:
+        if not shortcode_model.status:
             return DbAccessorResult(False, shortcode_model.description)
         
+        stats: List[DbAccessorResult] = []
+        stats.append(self._get_date_registered(shortcode))
+        stats.append(self._get_last_accessed(shortcode))
+
+        result = self._combine_db_results(stats)
+
+        return result
+
+    def _get_date_registered(self, shortcode: str) -> DbAccessorResult:
         db_model = self.db.query("date_registered", shortcode)
         db_model.value = f"date registered: {db_model.value}"
         return db_model
+
+    def _get_last_accessed(self, shortcode: str) -> DbAccessorResult:
+        db_model = self.db.query("last_accessed", shortcode)
+        db_model.value = f"last accessed: {db_model.value}"
+        return db_model
+
+    def _combine_db_results(self, results: List[DbAccessorResult]) -> DbAccessorResult:
+        for result in results:
+            if not result.status:
+                return result
+
+        concatenated_values = ""
+        for result in results:
+            concatenated_values += "\n" + str(result.value)
+
+        return DbAccessorResult(True, "Success", concatenated_values)
