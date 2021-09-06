@@ -1,5 +1,5 @@
 
-name: Actions
+name: Tests
 
 on:
   push:

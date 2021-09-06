@@ -1,5 +1,7 @@
 # URL Shortener
 
+[![Tests](https://github.com/jamie-sgro/url-shortener/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/jamie-sgro/url-shortener/actions/workflows/unit_tests.yml)
+
 This API handles the process of converting long URLs into shortcodes to ease the use of passing URLs between users and systems.
 
 
