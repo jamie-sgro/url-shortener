@@ -12,6 +12,7 @@ DOCKER_BUILDKIT=1 docker build \
   -t ${IMAGE}:dependencies \
   -f environment/Dockerfile .
 
+aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/j2m0y8o3
 docker push ${IMAGE}:dependencies
 
 # Build and tag with appropriate values
