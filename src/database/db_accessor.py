@@ -26,4 +26,6 @@ class DbAccessor(IDbAccessor):
     def query(cls, name: str, key: str) -> DbAccessorResult:
         cls.__init()
         result = cls._redis.hget(name, key)  # type: ignore
+        if result is None:
+            return DbAccessorResult(False, f"The shortcode `{key}` does not exist in the database")
         return DbAccessorResult(True, "Success", result)
