@@ -1,11 +1,11 @@
 
-name: Tests
+name: Main
 
 on:
   push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
+    branches: [main]
+    tags:
+      - '*.*.*'
 
 jobs:
   build_images:
@@ -30,6 +30,17 @@ jobs:
         # Can later be called with `${{steps.extract_branch.outputs.branch}}`
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_HEAD_REF} | tr /#/ _)"
         id: extract_branch
+
+      - name: Get version number
+        id: version_tag
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        
+      - name: Check output
+        env:
+          RELEASE_VERSION: ${{ steps.version_tag.outputs.tag }}
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ steps.version_tag.outputs.tag }}
         
       - name: Build Docker Images
         run: sh environment/build.bash;
@@ -42,10 +53,13 @@ jobs:
         env:
           ECR_REGISTRY: public.ecr.aws/j2m0y8o3
           ECR_REPOSITORY: url-shortener
+          RELEASE_VERSION: ${{ steps.version_tag.outputs.tag }}
         run: |
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
-          docker tag $ECR_REPOSITORY:latest  $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker tag $ECR_REPOSITORY:latest  $ECR_REGISTRY/$ECR_REPOSITORY:main
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:main
+          docker tag $ECR_REPOSITORY:latest  $ECR_REGISTRY/$ECR_REPOSITORY:$RELEASE_VERSION
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$RELEASE_VERSION
 
       - name: Log out of Amazon ECR
         if: always()

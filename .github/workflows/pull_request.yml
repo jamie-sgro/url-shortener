@@ -1,9 +1,9 @@
 
-name: Develop
+name: Pull Request
 
 on:
-  push:
-    branches: [develop]
+  pull_request:
+    branches: [main, develop]
 
 jobs:
   build_images:
@@ -42,8 +42,8 @@ jobs:
           ECR_REPOSITORY: url-shortener
         run: |
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
-          docker tag $ECR_REPOSITORY:latest  $ECR_REGISTRY/$ECR_REPOSITORY:develop
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:develop
+          docker tag $ECR_REPOSITORY:latest  $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
       - name: Log out of Amazon ECR
         if: always()
