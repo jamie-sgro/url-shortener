@@ -21,3 +21,13 @@ class TestUrlShortener:
 
         # Assert
         assert len(result) == 6
+
+    def test_can_submit_url_with_desired_shortcode(self):
+        # Arrange
+        url_shortener = UrlShortener()
+
+        # Act
+        result = url_shortener.submit_url_and_get_shortcode("some_url", "desired_shortcode")
+
+        # Assert
+        assert result == "desired_shortcode"
