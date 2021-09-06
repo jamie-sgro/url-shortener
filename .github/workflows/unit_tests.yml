@@ -12,15 +12,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Build Docker Images
-        run: |
-          sh environment/build.sh;
-
-      - name: Test Python Container
-        run: |
-          docker-compose -p url-shortener -f environment/docker-compose.yml up pytest
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -37,6 +28,15 @@ jobs:
         # Get branch name, and convert `#` and `/` into `_`
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_HEAD_REF} | tr /#/ _)"
         id: extract_branch
+        
+      - uses: actions/checkout@v2
+      - name: Build Docker Images
+        run: |
+          sh environment/build.sh;
+
+      - name: Test Python Container
+        run: |
+          docker-compose -p url-shortener -f environment/docker-compose.yml up pytest
 
       - name: Build, tag, and push image to Amazon ECR
         env:
