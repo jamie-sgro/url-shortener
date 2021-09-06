@@ -39,4 +39,4 @@ class TestUrlShortener:
         result = url_shortener.get_url_from_shortcode(shortcode)
 
         # Assert
-        assert result.value == str.encode(url)
+        assert result.value == url
