@@ -39,7 +39,8 @@ CMD [ "poetry", "shell" ]
 
 EXPOSE 5000
 
-ENV FLASK_APP=app
+# File location to start flask from
+ENV FLASK_APP=src/app
 ENV FLASK_ENV=development
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]
