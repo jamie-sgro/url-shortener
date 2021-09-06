@@ -39,4 +39,7 @@ CMD [ "poetry", "shell" ]
 
 EXPOSE 5000
 
+ENV FLASK_APP=src
+ENV FLASK_ENV=development
+
 ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
