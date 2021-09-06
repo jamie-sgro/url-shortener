@@ -34,7 +34,8 @@ jobs:
         
       - name: Extract branch name
         shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_HEAD_REF} | tr /#/ -)"
+        # Get branch name, and convert `#` and `/` into `_`
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_HEAD_REF} | tr /#/ _)"
         id: extract_branch
 
       - name: Build, tag, and push image to Amazon ECR
