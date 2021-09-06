@@ -1,14 +1,14 @@
 
-name: Main
+name: Main Branch
 
 on:
   push:
-    branches: [main]
     tags:
       - 'Release-*.*.*'
 
 jobs:
   build_images:
+    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
 
     steps:
