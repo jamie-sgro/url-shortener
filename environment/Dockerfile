@@ -1,15 +1,13 @@
 # ********************
 # **** Base Stage ****
 # ********************
-FROM python:3.9.6-bullseye AS base
-
-WORKDIR /app
-
 # **********************
 # **** Dependencies ****
 # **********************
 
-FROM base AS dependencies
+FROM python:3.9.6-bullseye AS dependencies
+
+WORKDIR /app
 
 # Install poetry
 RUN pip install --no-cache-dir \
