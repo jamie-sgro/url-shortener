@@ -3,7 +3,9 @@ from typing import Final
 import pytest
 from redis import Redis
 
-REDIS_HOST: Final = "redis"
+from src.factory import Factory
+
+REDIS_HOST: Final = Factory.create_redis_host()
 
 
 class TestRedisConnection:
