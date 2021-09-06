@@ -37,4 +37,10 @@ COPY . .
 # - Allows poetry environment to be discoverable when selecting python interpreter
 CMD [ "poetry", "shell" ]
 
-ENTRYPOINT [ "tail", "-f", "/dev/null" ]
+EXPOSE 5000
+
+# File location to start flask from
+ENV FLASK_APP=src/app
+ENV FLASK_ENV=development
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]
