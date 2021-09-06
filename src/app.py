@@ -10,7 +10,7 @@ def home():
     return redirect("https://github.com/jamie-sgro/url-shortener", code=302)
 
 
-@app.route("/api/v1/url/add", methods=["POST"])
+@app.route("/api/v1/url", methods=["POST"])
 def url_add():
     url = request.args.get("url")
     if type(url) is not str:
@@ -24,9 +24,9 @@ def url_add():
 
     return shortcode_model.value
 
-@app.route("/api/v1/shortcode/get", methods=["GET"])
-def shortcode_get():
-    shortcode = request.args.get("shortcode")
+
+@app.route("/api/v1/shortcode/<shortcode>", methods=["GET"])
+def shortcode_get(shortcode):
     if type(shortcode) is not str:
         return "malformed shortcode", 400
 
@@ -36,7 +36,4 @@ def shortcode_get():
     if not url_model.status:
         return url_model.description, 400
 
-    return url_model.value
-
-# test12345
-# SS0W5X
+    return redirect(str(url_model.value), code=302)

@@ -1,6 +1,6 @@
 from typing import Any, Final
 
-from redis import Redis
+from redis import StrictRedis
 
 from src.database.i_db_accessor import IDbAccessor, DbAccessorResult
 
@@ -8,11 +8,11 @@ REDIS_HOST: Final = "redis"
 
 
 class DbAccessor(IDbAccessor):
-    _redis: Redis
+    _redis: StrictRedis
 
     @classmethod
     def __init(cls):
-        cls._redis = Redis(REDIS_HOST)
+        cls._redis = StrictRedis(REDIS_HOST, decode_responses=True)
 
     @classmethod
     def add(cls, name: str, key: str, value: Any) -> DbAccessorResult:
