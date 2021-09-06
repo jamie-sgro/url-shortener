@@ -10,16 +10,16 @@ parse_branch_name () {
   echo $temp_branch_name
 }
 
-BRANCH_NAME=${1:-$(parse_branch_name)}
+TAG_NAME=${1:-$(parse_branch_name)}
 
-echo Attempting to pull image for branch ${BRANCH_NAME}
+echo Attempting to pull image for branch ${TAG_NAME}
 
 # # Pull the latest runtime image from remote repository
-docker pull public.ecr.aws/j2m0y8o3/url-shortener:${BRANCH_NAME} || true
+docker pull public.ecr.aws/j2m0y8o3/url-shortener:feature__3_setup_cicd_for_pr_reviews || true
 
 # # Build and tag with appropriate values
 docker build \
-  --cache-from public.ecr.aws/j2m0y8o3/url-shortener:${BRANCH_NAME} \
+  --cache-from public.ecr.aws/j2m0y8o3/url-shortener:feature__3_setup_cicd_for_pr_reviews \
   -t url-shortener:latest \
   -t url-shortener:$(git rev-parse --short HEAD) \
   -f environment/Dockerfile .
