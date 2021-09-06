@@ -27,6 +27,7 @@ jobs:
       - name: Extract branch name
         shell: bash
         # Get branch name, and convert `#` and `/` into `_`
+        # Can later be called with `${{steps.extract_branch.outputs.branch}}`
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_HEAD_REF} | tr /#/ _)"
         id: extract_branch
         
@@ -43,8 +44,8 @@ jobs:
           ECR_REPOSITORY: url-shortener
         run: |
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
-          docker tag $ECR_REPOSITORY:latest  $ECR_REGISTRY/$ECR_REPOSITORY:${{steps.extract_branch.outputs.branch}}
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{steps.extract_branch.outputs.branch}}
+          docker tag $ECR_REPOSITORY:latest  $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
       - name: Log out of Amazon ECR
         if: always()
