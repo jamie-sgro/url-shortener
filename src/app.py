@@ -16,8 +16,10 @@ def url_add():
     if type(url) is not str:
         return "malformed url", 400
 
+    desired_shortcode = request.args.get("desired-shortcode")
+
     url_shortener = UrlShortener()
-    shortcode_model = url_shortener.submit_url_and_get_shortcode(url)
+    shortcode_model = url_shortener.submit_url_and_get_shortcode(url, desired_shortcode)
 
     if not shortcode_model.status:
         return shortcode_model.description, 400
