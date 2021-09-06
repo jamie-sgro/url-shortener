@@ -4,6 +4,7 @@ from redis import Redis
 from src.database.db_accessor import REDIS_HOST
 from src.factory import Factory
 
+
 class TestRedisConnection:
     r: Redis
 
@@ -34,7 +35,7 @@ class TestRedisConnection:
         assert result.value == "a user name"
 
     @pytest.mark.integration_test
-    def test_cannot_add_smae_data_twice(self, _setup_and_teardown_hashed_test_data):
+    def test_cannot_add_same_data_twice(self, _setup_and_teardown_hashed_test_data):
         # Arrange
         db = Factory.create_db_accessor()
 
