@@ -37,4 +37,6 @@ COPY . .
 # - Allows poetry environment to be discoverable when selecting python interpreter
 CMD [ "poetry", "shell" ]
 
-ENTRYPOINT [ "tail", "-f", "/dev/null" ]
+EXPOSE 5000
+
+ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
