@@ -1,8 +1,11 @@
 from abc import ABC, abstractclassmethod
 
+
 class IDbAccessor(ABC):
     @abstractclassmethod
-    def add(cls): ...
+    def add(cls, name: str, key: str):
+        ...
 
     @abstractclassmethod
-    def query(cls): ...
+    def query(cls, name: str, key: str):
+        ...

@@ -3,9 +3,8 @@ from typing import Final
 from redis import Redis
 
 from src.database.i_db_accessor import IDbAccessor
-from src.factory import Factory
 
-REDIS_HOST: Final = Factory.create_redis_host()
+REDIS_HOST: Final = "redis"
 
 
 class DbAccessor(IDbAccessor):
@@ -16,9 +15,9 @@ class DbAccessor(IDbAccessor):
         cls._redis = Redis(REDIS_HOST)
 
     @classmethod
-    def add(cls):
+    def add(cls, name: str, key: str):
         cls.__init()
 
     @classmethod
-    def query(cls):
+    def query(cls, name: str, key: str):
         cls.__init()
