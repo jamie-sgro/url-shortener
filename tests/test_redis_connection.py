@@ -48,4 +48,4 @@ class TestRedisConnection:
 
         # Assert
         result = db.query("users", "user123")
-        assert result == "a user name"
+        assert result == b"a user name"

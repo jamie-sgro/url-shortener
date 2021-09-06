@@ -20,6 +20,6 @@ class DbAccessor(IDbAccessor):
         cls._redis.hset(name, key, value)
 
     @classmethod
-    def query(cls, name: str, key: str):
+    def query(cls, name: str, key: str) -> bytes:
         cls.__init()
-        cls._redis.hget(name, key)
+        return cls._redis.hget(name, key)
