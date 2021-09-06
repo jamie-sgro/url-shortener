@@ -16,7 +16,7 @@ class TestUrlShortener:
 
         @classmethod
         def increment(cls, name: str, key: str, value: int) -> DbAccessorResult:
-            return DbAccessorResult(True, "Success", value) 
+            return DbAccessorResult(True, "Success", value)
 
         @classmethod
         def query(cls, name: str, key: str) -> DbAccessorResult:

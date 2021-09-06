@@ -38,8 +38,9 @@ def shortcode_get(shortcode):
     url = str(url_model.value)
     if url[4:] is not "http":
         url = "http://" + url
-        
+
     return redirect("http://" + str(url_model.value), code=302)
+
 
 @app.route("/api/v1/shortcode/<shortcode>/stats", methods=["GET"])
 def shortcode_stats(shortcode):

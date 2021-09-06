@@ -14,7 +14,9 @@ class UrlShortener:
     def __init__(self) -> None:
         self.db = Factory.create_db_accessor()
 
-    def submit_url_and_get_shortcode(self, url: str, user_shortcode: str = None) -> DbAccessorResult:
+    def submit_url_and_get_shortcode(
+        self, url: str, user_shortcode: str = None
+    ) -> DbAccessorResult:
         self.url = url
         shortcode_model = self._get_shortcode(user_shortcode)
         if not shortcode_model.value:
@@ -37,7 +39,7 @@ class UrlShortener:
         )
 
     def _send_shortcode_to_db(self, url: str, shortcode: str) -> DbAccessorResult:
-        # Because the db currently being used is redis, the in-memory lookup costs are 
+        # Because the db currently being used is redis, the in-memory lookup costs are
         # low enough to simply include the reverse value-key
         self.db.add("urls", shortcode, self.url)
         result = self.db.add("shortcodes", url, shortcode)
@@ -46,7 +48,6 @@ class UrlShortener:
         self.db.add_overwrite("last_accessed", shortcode, "never")
         self.db.increment("access_count", shortcode, 0)
 
-
         return result
 
     def get_url_from_shortcode(self, shortcode: str) -> DbAccessorResult:
@@ -54,7 +55,7 @@ class UrlShortener:
         print(shortcode_model, flush=True)
         if not shortcode_model.status:
             return DbAccessorResult(False, shortcode_model.description)
-        
+
         self.db.add_overwrite("last_accessed", shortcode, self._get_utc_now())
         self.db.increment("access_count", shortcode, 1)
 
@@ -68,7 +69,7 @@ class UrlShortener:
         shortcode_model = ShortcodeValidator.is_valid(shortcode)
         if not shortcode_model.status:
             return DbAccessorResult(False, shortcode_model.description)
-        
+
         stats: List[DbAccessorResult] = []
         stats.append(self._get_date_registered(shortcode))
         stats.append(self._get_last_accessed(shortcode))
