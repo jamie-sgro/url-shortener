@@ -15,11 +15,7 @@ TAG_NAME=${1:-$(parse_branch_name)}
 echo Attempting to pull image for branch ${TAG_NAME}
 
 # # Pull the latest runtime image from remote repository
-docker pull public.ecr.aws/j2m0y8o3/url-shortener:feature__3_setup_cicd_for_pr_reviews || true
+docker pull public.ecr.aws/j2m0y8o3/url-shortener:${TAG_NAME} || true
 
 # # Build and tag with appropriate values
-docker build \
-  --cache-from public.ecr.aws/j2m0y8o3/url-shortener:feature__3_setup_cicd_for_pr_reviews \
-  -t url-shortener:latest \
-  -t url-shortener:$(git rev-parse --short HEAD) \
-  -f environment/Dockerfile .
+docker build --cache-from public.ecr.aws/j2m0y8o3/url-shortener:${TAG_NAME} -t url-shortener:latest -t url-shortener:$(git rev-parse --short HEAD) -f environment/Dockerfile .
