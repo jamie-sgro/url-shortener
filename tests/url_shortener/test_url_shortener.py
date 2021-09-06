@@ -1,11 +1,13 @@
 from typing import Any
 from src.database.i_db_accessor import DbAccessorResult, IDbAccessor
-from unittest.mock import Mock
+
+import pytest
 
 from src.url_shortener.url_shortener import UrlShortener
+from tests.base_test import BaseTest
 
 
-class TestUrlShortener:
+class TestUrlShortener(BaseTest):
     class MockDb(IDbAccessor):
         @classmethod
         def add(cls, name: str, key: str, value: Any) -> DbAccessorResult:
@@ -51,3 +53,19 @@ class TestUrlShortener:
 
         # Assert
         assert result.value == "DesiredShortcode"
+
+    @pytest.mark.integration_test
+    def test_can_lookup_url_from_shortcode(self, _setup_and_teardown_hashed_test_data):
+        # Arrange
+        url_shortener = UrlShortener()
+        url = "test"
+
+        # Act
+        shortcode_model = url_shortener.submit_url_and_get_shortcode(url)
+        assert shortcode_model.status == True, "data likely already exists for this key"
+        assert type(shortcode_model.value) == str
+        shortcode = str(shortcode_model.value)
+        result = url_shortener.get_url_from_shortcode(shortcode)
+
+        # Assert
+        assert result.value == url

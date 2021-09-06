@@ -45,4 +45,10 @@ class UrlShortener:
 
     def _send_shortcode_to_db(self) -> DbAccessorResult:
         result = self.db.add("shortcodes", self.url, self.shortcode)
+        # Because the db currently being used is redis, the in-memory lookup costs are 
+        # low enough to simply include the reverse value-key
+        self.db.add("urls", self.shortcode, self.url)
         return result
+
+    def get_url_from_shortcode(self, shortcode: str) -> DbAccessorResult:
+        return self.db.query("urls", shortcode)
