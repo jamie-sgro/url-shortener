@@ -38,7 +38,7 @@ jobs:
         run: |
           docker-compose -p url-shortener -f environment/docker-compose.yml up pytest
 
-      - name: Build, tag, and push image to Amazon ECR
+      - name: Tag, and push image to Amazon ECR
         env:
           ECR_REGISTRY: public.ecr.aws/j2m0y8o3
           ECR_REPOSITORY: url-shortener
