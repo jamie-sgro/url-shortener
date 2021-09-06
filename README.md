@@ -1,5 +1,7 @@
 # URL Shortener
 
+[![Tests](https://github.com/jamie-sgro/url-shortener/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/jamie-sgro/url-shortener/actions/workflows/unit_tests.yml)
+
 This API handles the process of converting long URLs into shortcodes to ease the use of passing URLs between users and systems.
 
 
@@ -7,9 +9,9 @@ This API handles the process of converting long URLs into shortcodes to ease the
 ## Installation
 
 - Ensure you have the latest version of Docker Desktop installed
-- Run `sh environment/build.sh` from the root of the repository
+- Run `sh environment/build.bash` from the root of the repository
   - In Windows, use Git Bash terminal, PowerShell, or equivalent to execute bash scripts
-- To spin up containers, run `sh environment/start.sh` from the root of the repository
+- To spin up containers, run `sh environment/start.bash` from the root of the repository
 
 
 
