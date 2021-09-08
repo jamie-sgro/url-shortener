@@ -36,10 +36,10 @@ def shortcode_get(shortcode):
         return url_model.description, 400
 
     url = str(url_model.value)
-    if url[4:] is not "http":
-        url = "http://" + url
+    if url[4:] != "http":
+        url = "https://" + url
 
-    return redirect("http://" + str(url_model.value), code=302)
+    return redirect(url, code=302)
 
 
 @app.route("/api/v1/shortcode/<shortcode>/stats", methods=["GET"])
