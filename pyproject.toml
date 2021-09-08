@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "url-shortener"
-version = "0.3.1"
+version = "0.4.0"
 description = "This API handles the process of converting long URLs into shortcodes to ease the use of passing URLs between users and systems."
 authors = ["Jamie Sgro <jamie.sgro@uwaterloo.ca>"]
 
