@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for
+from flask import Flask, request, redirect
 
 from src.url_shortener.url_shortener import UrlShortener
 
