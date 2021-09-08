@@ -55,3 +55,9 @@ class DbAccessor(IDbAccessor):
                 False, f"The shortcode `{key}` does not exist in the database"
             )
         return DbAccessorResult(True, "Success", result)
+
+    @classmethod
+    def query_all(cls, name: str) -> DbAccessorResult:
+        cls.__init()
+        result = cls._redis.hgetall(name)
+        return DbAccessorResult(True, "Success", result)

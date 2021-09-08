@@ -30,3 +30,7 @@ class IDbAccessor(ABC):
     @abstractclassmethod
     def query(cls, name: str, key: str) -> DbAccessorResult:
         ...
+
+    @abstractclassmethod
+    def query_all(cls, name: str) -> DbAccessorResult:
+        ...

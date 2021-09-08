@@ -26,6 +26,10 @@ class TestUrlShortener:
         def query(cls, name: str, key: str) -> DbAccessorResult:
             return DbAccessorResult(True, "Success", "a_value")
 
+        @classmethod
+        def query_all(cls, name: str) -> DbAccessorResult:
+            return DbAccessorResult(True, "Success", name)
+
     def test_can_submit_url_and_get_string(self):
         # Arrange
         url_shortener = UrlShortener()
