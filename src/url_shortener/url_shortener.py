@@ -46,10 +46,6 @@ class UrlShortener:
 
         self._add_stats(shortcode)
 
-        self.db.add("date_registered", shortcode, self._get_utc_now())
-        self.db.add_overwrite("last_accessed", shortcode, "never")
-        self.db.increment("access_count", shortcode, 0)
-
         return result
 
     def _add_stats(self, shortcode):
