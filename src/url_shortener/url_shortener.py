@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 
 from src.database.i_db_accessor import DbAccessorResult, IDbAccessor
 from src.url_shortener.shortcode_validator import ShortcodeValidator, ShortcodeResult
+from src.url_shortener.keys import Keys
 from src.factory import Factory
 
 
@@ -41,25 +42,33 @@ class UrlShortener:
     def _send_shortcode_to_db(self, url: str, shortcode: str) -> DbAccessorResult:
         # Because the db currently being used is redis, the in-memory lookup costs are
         # low enough to simply include the reverse value-key
-        self.db.add("urls", shortcode, self.url)
-        result = self.db.add("shortcodes", url, shortcode)
+        self.db.add(Keys.urls, shortcode, self.url)
+        result = self.db.add(Keys.shortcodes, url, shortcode)
 
-        self.db.add("date_registered", shortcode, self._get_utc_now())
-        self.db.add_overwrite("last_accessed", shortcode, "never")
-        self.db.increment("access_count", shortcode, 0)
+        self._add_stats(shortcode)
 
         return result
 
+    def _add_stats(self, shortcode):
+        stats = {
+            Keys.date_registered: self._get_utc_now(),
+            Keys.last_accessed: "never",
+            Keys.access_count: 0,
+        }
+        stats_key = Keys().stats(shortcode)
+        self.db.add_complex(stats_key, stats)
+
     def get_url_from_shortcode(self, shortcode: str) -> DbAccessorResult:
         shortcode_model = ShortcodeValidator.is_valid(shortcode)
-        print(shortcode_model, flush=True)
         if not shortcode_model.status:
             return DbAccessorResult(False, shortcode_model.description)
 
-        self.db.add_overwrite("last_accessed", shortcode, self._get_utc_now())
-        self.db.increment("access_count", shortcode, 1)
+        stats_key = Keys().stats(shortcode)
 
-        return self.db.query("urls", shortcode)
+        self.db.add_overwrite(stats_key, Keys.last_accessed, self._get_utc_now())
+        self.db.increment(stats_key, Keys.access_count, 1)
+
+        return self.db.query(Keys.urls, shortcode)
 
     @staticmethod
     def _get_utc_now() -> str:
@@ -70,37 +79,5 @@ class UrlShortener:
         if not shortcode_model.status:
             return DbAccessorResult(False, shortcode_model.description)
 
-        stats: List[DbAccessorResult] = []
-        stats.append(self._get_date_registered(shortcode))
-        stats.append(self._get_last_accessed(shortcode))
-        stats.append(self._get_access_count(shortcode))
-
-        result = self._combine_db_results(stats)
-
-        return result
-
-    def _get_date_registered(self, shortcode: str) -> DbAccessorResult:
-        db_model = self.db.query("date_registered", shortcode)
-        db_model.value = f"date registered: {db_model.value}"
-        return db_model
-
-    def _get_last_accessed(self, shortcode: str) -> DbAccessorResult:
-        db_model = self.db.query("last_accessed", shortcode)
-        db_model.value = f"last accessed: {db_model.value}"
-        return db_model
-
-    def _combine_db_results(self, results: List[DbAccessorResult]) -> DbAccessorResult:
-        for result in results:
-            if not result.status:
-                return result
-
-        concatenated_values = ""
-        for result in results:
-            concatenated_values += "\n" + str(result.value)
-
-        return DbAccessorResult(True, "Success", concatenated_values)
-
-    def _get_access_count(self, shortcode: str) -> DbAccessorResult:
-        db_model = self.db.query("access_count", shortcode)
-        db_model.value = f"access count: {db_model.value}"
-        return db_model
+        stats_key = Keys().stats(shortcode)
+        return self.db.query_all(stats_key)

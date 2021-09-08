@@ -31,6 +31,14 @@ class DbAccessor(IDbAccessor):
         return DbAccessorResult(True, "Success", value)
 
     @classmethod
+    def add_complex(cls, name: str, mapping: dict) -> DbAccessorResult:
+        """Set key to value within hash name for each corresponding key
+        and value from the mapping dict"""
+        cls.__init()
+        result = cls._redis.hmset(name, mapping)
+        return DbAccessorResult(True, "Success", mapping)
+
+    @classmethod
     def increment(cls, name: str, key: str, value: int) -> DbAccessorResult:
         """Increments the number stored at key by one. If the key does not exist,
         it is set to 0 before performing the operation"""
@@ -46,4 +54,10 @@ class DbAccessor(IDbAccessor):
             return DbAccessorResult(
                 False, f"The shortcode `{key}` does not exist in the database"
             )
+        return DbAccessorResult(True, "Success", result)
+
+    @classmethod
+    def query_all(cls, name: str) -> DbAccessorResult:
+        cls.__init()
+        result = cls._redis.hgetall(name)
         return DbAccessorResult(True, "Success", result)
