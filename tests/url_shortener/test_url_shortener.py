@@ -15,6 +15,10 @@ class TestUrlShortener:
             return DbAccessorResult(True, "Success", value)
 
         @classmethod
+        def add_complex(cls, name: str, mapping: dict) -> DbAccessorResult:
+            return DbAccessorResult(True, "Success", mapping)
+
+        @classmethod
         def increment(cls, name: str, key: str, value: int) -> DbAccessorResult:
             return DbAccessorResult(True, "Success", value)
 

@@ -26,6 +26,22 @@ class TestRedisConnection:
             self.r.hdel(key, hash)
 
     @pytest.mark.integration_test
+    def test1(self):
+        self.r = Redis(REDIS_HOST)
+        d = {"date_registered": "a", "last_accessed": "b", "access_count": 0}
+        self.r.hmset("stats", d)
+
+    def test3(self):
+        self.r = Redis(REDIS_HOST)
+        self.r.hset("stats", "access_count", -99)
+
+    def test2(self):
+        self.r = Redis(REDIS_HOST)
+        result = self.r.hgetall("stats")
+        print(result)
+        assert False
+
+    @pytest.mark.integration_test
     def test_can_add_data(self, _setup_and_teardown_hashed_test_data):
         # Arrange
         db = Factory.create_db_accessor()

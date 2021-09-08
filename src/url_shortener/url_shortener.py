@@ -44,15 +44,24 @@ class UrlShortener:
         self.db.add("urls", shortcode, self.url)
         result = self.db.add("shortcodes", url, shortcode)
 
+        self._add_stats(shortcode)
+
         self.db.add("date_registered", shortcode, self._get_utc_now())
         self.db.add_overwrite("last_accessed", shortcode, "never")
         self.db.increment("access_count", shortcode, 0)
 
         return result
 
+    def _add_stats(self, shortcode):
+        stats = {
+            "date_registered": self._get_utc_now(),
+            "last_accessed": "never",
+            "access_count": 0,
+        }
+        self.db.add_complex(f"{shortcode}-stats", stats)
+
     def get_url_from_shortcode(self, shortcode: str) -> DbAccessorResult:
         shortcode_model = ShortcodeValidator.is_valid(shortcode)
-        print(shortcode_model, flush=True)
         if not shortcode_model.status:
             return DbAccessorResult(False, shortcode_model.description)
 

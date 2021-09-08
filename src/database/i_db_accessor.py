@@ -7,7 +7,7 @@ from abc import ABC, abstractclassmethod
 class DbAccessorResult:
     status: bool
     description: str
-    value: Union[str, int, None] = None
+    value: Union[dict, str, int, None] = None
 
 
 class IDbAccessor(ABC):
@@ -17,6 +17,10 @@ class IDbAccessor(ABC):
 
     @classmethod
     def add_overwrite(cls, name: str, key: str, value: Any) -> DbAccessorResult:
+        ...
+
+    @classmethod
+    def add_complex(cls, name: str, mapping: dict) -> DbAccessorResult:
         ...
 
     @classmethod
