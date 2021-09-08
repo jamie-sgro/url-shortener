@@ -11,8 +11,24 @@ class TestUrlShortener:
             return DbAccessorResult(True, "Success", value)
 
         @classmethod
+        def add_overwrite(cls, name: str, key: str, value: Any) -> DbAccessorResult:
+            return DbAccessorResult(True, "Success", value)
+
+        @classmethod
+        def add_complex(cls, name: str, mapping: dict) -> DbAccessorResult:
+            return DbAccessorResult(True, "Success", mapping)
+
+        @classmethod
+        def increment(cls, name: str, key: str, value: int) -> DbAccessorResult:
+            return DbAccessorResult(True, "Success", value)
+
+        @classmethod
         def query(cls, name: str, key: str) -> DbAccessorResult:
             return DbAccessorResult(True, "Success", "a_value")
+
+        @classmethod
+        def query_all(cls, name: str) -> DbAccessorResult:
+            return DbAccessorResult(True, "Success", name)
 
     def test_can_submit_url_and_get_string(self):
         # Arrange

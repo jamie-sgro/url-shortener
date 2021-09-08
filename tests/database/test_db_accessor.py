@@ -27,8 +27,6 @@ class TestRedisConnection:
 
     @pytest.mark.integration_test
     def test_can_add_data(self, _setup_and_teardown_hashed_test_data):
-        print(self.r.hget("urls", "test"))
-        _setup_and_teardown_hashed_test_data
         # Arrange
         db = Factory.create_db_accessor()
 
@@ -57,3 +55,58 @@ class TestRedisConnection:
         result = db.query("urls", "test")
 
         assert result.value is None
+
+    @pytest.mark.integration_test
+    def test_can_increment_data_by_zero(self, _setup_and_teardown_hashed_test_data):
+        # Arrange
+        db = Factory.create_db_accessor()
+
+        # Act
+        result = db.increment("users", "user123", 0)
+        assert result.status
+        assert result.value != -1
+        assert result.value == 0
+        assert result.value != 1
+
+    @pytest.mark.integration_test
+    def test_can_increment_data_once(self, _setup_and_teardown_hashed_test_data):
+        # Arrange
+        db = Factory.create_db_accessor()
+
+        # Act
+        result = db.increment("users", "user123", 1)
+        assert result.status
+        assert result.value != 0
+        assert result.value == 1
+        assert result.value != 2
+
+    @pytest.mark.integration_test
+    def test_can_increment_data_several_times(
+        self, _setup_and_teardown_hashed_test_data
+    ):
+        # Arrange
+        db = Factory.create_db_accessor()
+
+        # Act
+        result = db.increment("users", "user123", 1)
+        result = db.increment("users", "user123", 1)
+        result = db.increment("users", "user123", 1)
+        assert result.status
+        assert result.value != 0
+        assert result.value == 3
+        assert result.value != 2
+
+    @pytest.mark.integration_test
+    def test_can_increment_data_by_different_values(
+        self, _setup_and_teardown_hashed_test_data
+    ):
+        # Arrange
+        db = Factory.create_db_accessor()
+
+        # Act
+        result = db.increment("users", "user123", 0)
+        result = db.increment("users", "user123", 1)
+        assert result.status
+        assert result.value != 0
+        assert result.value == 1
+        assert result.value != 2
