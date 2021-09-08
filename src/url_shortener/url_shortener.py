@@ -65,8 +65,10 @@ class UrlShortener:
         if not shortcode_model.status:
             return DbAccessorResult(False, shortcode_model.description)
 
-        self.db.add_overwrite("last_accessed", shortcode, self._get_utc_now())
-        self.db.increment("access_count", shortcode, 1)
+        stats_key = f"{shortcode}-stats"
+
+        self.db.add_overwrite(stats_key, "last_accessed", self._get_utc_now())
+        self.db.increment(stats_key, "access_count", 1)
 
         return self.db.query("urls", shortcode)
 
@@ -79,37 +81,4 @@ class UrlShortener:
         if not shortcode_model.status:
             return DbAccessorResult(False, shortcode_model.description)
 
-        stats: List[DbAccessorResult] = []
-        stats.append(self._get_date_registered(shortcode))
-        stats.append(self._get_last_accessed(shortcode))
-        stats.append(self._get_access_count(shortcode))
-
-        result = self._combine_db_results(stats)
-
-        return result
-
-    def _get_date_registered(self, shortcode: str) -> DbAccessorResult:
-        db_model = self.db.query("date_registered", shortcode)
-        db_model.value = f"date registered: {db_model.value}"
-        return db_model
-
-    def _get_last_accessed(self, shortcode: str) -> DbAccessorResult:
-        db_model = self.db.query("last_accessed", shortcode)
-        db_model.value = f"last accessed: {db_model.value}"
-        return db_model
-
-    def _combine_db_results(self, results: List[DbAccessorResult]) -> DbAccessorResult:
-        for result in results:
-            if not result.status:
-                return result
-
-        concatenated_values = ""
-        for result in results:
-            concatenated_values += "\n" + str(result.value)
-
-        return DbAccessorResult(True, "Success", concatenated_values)
-
-    def _get_access_count(self, shortcode: str) -> DbAccessorResult:
-        db_model = self.db.query("access_count", shortcode)
-        db_model.value = f"access count: {db_model.value}"
-        return db_model
+        return self.db.query_all(f"{shortcode}-stats")
